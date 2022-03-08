@@ -1,3 +1,4 @@
+//TODO: Move db code to separate file
 const  Sequelize  = require("sequelize");
 const sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/bill_db');
 
@@ -32,11 +33,40 @@ const syncAndSeed = async()=>{
     }
 }
 
+Bill.generateRandom =function(){
+    return this.create({name: `Bill ${Math.ceil(Math.random()*100)}`, amount: Math.ceil(Math.random() * 400)});
+}
+
+const express = require('express');
+const app = express();
+
+app.get('/api/bills', async(req,res,next)=>{
+    try{
+        const bills = await Bill.findAll();
+        res.send(bills);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
+app.post('/api/bills', async(req,res,next)=>{
+    try{
+       res.status(201).send(await Bill.generateRandom());
+    }
+    catch(err){
+        next(err);
+    }
+});
+
 const start = async ()=>{
     try{
         await sequelize.sync({force: true});
-        
+
         syncAndSeed();
+
+        const port = process.env.PORT || 3000;
+        app.listen(port, ()=> console.log(`listening on ${port}`));
     }
     catch(err){
         console.log(err);
