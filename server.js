@@ -43,26 +43,7 @@ const path = require('path');
 
 app.use('/dist',express.static(path.join(__dirname, './dist')));
 
-app.get('/',async(req,res,next)=>{
-    try{
-        const html = `
-        <html>
-            <head>
-                <title>Dealers Choice React w/webpack</title>
-                <script src='/dist/main.js' defer></script>
-            </head>
-            
-            <body>
-                <div id='root'></div>
-            </body>
-        </html>`
-
-        res.send(html);
-    }
-    catch(err){
-        next(err);
-    }
-});
+app.get('/',(req,res,)=>res.sendFile(path.join(__dirname,'index.html')));
 
 app.get('/api/bills', async(req,res,next)=>{
     try{
