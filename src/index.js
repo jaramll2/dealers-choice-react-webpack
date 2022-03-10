@@ -18,7 +18,12 @@ class App extends React.Component{
     }
 
     async create(){
-        const response = await axios.post('/api/bills');
+        const billName = document.getElementById('name').value
+        const billAmount = parseInt(document.getElementById('amount').value);
+
+        const newBill = {name: billName, amount: billAmount};
+
+        const response = await axios.post('/api/bills', newBill);
         const bill = response.data;
         const bills = [...this.state.bills,bill];
         this.setState({bills});
@@ -31,13 +36,12 @@ class App extends React.Component{
         this.setState({bills});
     }
 
-    //practice components and props, make bill component 
-    //display data in an easier to read format --- two columns
     render(){
         const bills = this.state.bills;
         return (<><div>
             <ul>
                 {bills.map(bill => {
+                    console.log(bill)
                     return (
                         <li key={bill.id}>Description: {bill.name} Amount: ${bill.amount} <br></br> <button onClick={()=> this.destroy(bill)}>Remove Bill For the Month</button></li>
                     );
@@ -58,7 +62,5 @@ class App extends React.Component{
     }
 }
 
-let billName = document.querySelector('#name');
-let billAmount = document.querySelector('#amount');
 const root = document.querySelector('#root');
 ReactDOM.render(<App />, root);

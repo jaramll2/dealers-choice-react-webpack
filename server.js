@@ -41,6 +41,10 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
+
 app.use('/dist',express.static(path.join(__dirname, './dist')));
 
 app.get('/',(req,res,)=>res.sendFile(path.join(__dirname,'index.html')));
@@ -55,10 +59,10 @@ app.get('/api/bills', async(req,res,next)=>{
     }
 });
 
-//grab data from req
 app.post('/api/bills', async(req,res,next)=>{
     try{
-       res.status(201).send(await Bill.generateRandom());
+       const newBill = await Bill.create({name: req.body.name, amount: req.body.amount}); 
+       res.status(201).send(newBill);
     }
     catch(err){
         next(err);
