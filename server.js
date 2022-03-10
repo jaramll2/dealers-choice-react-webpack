@@ -65,6 +65,17 @@ app.post('/api/bills', async(req,res,next)=>{
     }
 });
 
+app.delete('/api/bills/:id',async(req,res,next)=>{
+    try{
+        const bill = await Bill.findByPk(req.params.id);
+        await bill.destroy();
+        res.sendStatus(204);
+    }
+    catch(err){
+        next(err);
+    }
+});
+
 const start = async ()=>{
     try{
         await sequelize.sync({force: true});

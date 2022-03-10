@@ -25,6 +25,12 @@ class App extends React.Component{
 
     }
 
+    async destroy(bill){
+        await axios.delete(`/api/bills/${bill.id}`);
+        const bills = this.state.bills.filter(_bill=>_bill.id !==bill.id);
+        this.setState({bills});
+    }
+
     //practice components and props, make bill component 
     //display data in an easier to read format --- two columns
     render(){
@@ -33,7 +39,7 @@ class App extends React.Component{
             <ul>
                 {bills.map(bill => {
                     return (
-                        <li key={bill.id}>Description: {bill.name} Amount: ${bill.amount}</li>
+                        <li key={bill.id}>Description: {bill.name} Amount: ${bill.amount} <br></br> <button onClick={()=> this.destroy(bill)}>Remove Bill For the Month</button></li>
                     );
                 })}
             </ul>
