@@ -55,6 +55,7 @@ app.get('/api/bills', async(req,res,next)=>{
     }
 });
 
+//grab data from req
 app.post('/api/bills', async(req,res,next)=>{
     try{
        res.status(201).send(await Bill.generateRandom());
